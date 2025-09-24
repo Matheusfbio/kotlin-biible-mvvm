@@ -294,9 +294,3 @@ class MainActivity : ComponentActivity() {
 * Melhorar UI usando **LazyColumn** para múltiplos versículos.
 * Tratar erros mais detalhadamente e mostrar mensagens amigáveis.
 * Adicionar **Pull-to-Refresh** ou cache com expiração.
-
----
-
-Se você quiser, posso montar **uma versão final já com Room integrado**, que salva os versículos no banco e lê do banco quando offline, mantendo MVVM + Compose funcionando lindamente.
-
-Quer que eu faça isso?
