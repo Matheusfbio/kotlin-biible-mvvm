@@ -1,12 +1,15 @@
 package com.br.android_learn.ui.screen
 
 import ads_mobile_sdk.h5
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -29,19 +32,14 @@ fun BibleVerseScreen(viewModel: BibleViewModel) {
     val verse by viewModel.verse
     val loading by viewModel.loading
     val error by viewModel.error
-
-    var inputText by remember { mutableStateOf("") }  // Aqui armazenamos o texto do usuário
+    var inputText by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text(text = "Bíblia API MVVM", style = MaterialTheme.typography.bodyMedium)
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Campo para digitar a passagem
+        // Campo de pesquisa
         TextField(
             value = inputText,
             onValueChange = { inputText = it },
@@ -51,7 +49,6 @@ fun BibleVerseScreen(viewModel: BibleViewModel) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Botão para buscar
         Button(
             onClick = {
                 if (inputText.isNotBlank()) {
@@ -65,15 +62,27 @@ fun BibleVerseScreen(viewModel: BibleViewModel) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Exibir conteúdo
+        // Conteúdo
         when {
             loading -> CircularProgressIndicator()
             error != null -> Text(text = "Erro: $error", color = Color.Red)
             verse != null -> {
-                verse!!.verses.forEach { v ->
-                    Text(text = "${v.book_name} ${v.chapter}:${v.verse}", style = MaterialTheme.typography.bodyLarge)
-                    Text(text = v.text, style = MaterialTheme.typography.bodyMedium)
-                    Spacer(modifier = Modifier.height(8.dp))
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(verse!!.verses) { v ->
+                        Column(modifier = Modifier.fillMaxWidth()) {
+                            Text(
+                                text = "${v.book_name} ${v.chapter}:${v.verse}",
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                            Text(
+                                text = v.text,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                    }
                 }
             }
         }
